@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Evolve" Version="2.4.0" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MyData.Core\MyData.Core.csproj" />
+      <ProjectReference Include="..\MyData.Infrastructure\MyData.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="Migration\Postgres\V1__initial_schema.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+
+</Project>
