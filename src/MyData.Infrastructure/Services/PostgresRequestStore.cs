@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using MyData.Core.Interfaces;
 using MyData.Core.Models;
 using MyData.Infrastructure.EntityFrameworkCore;
@@ -15,6 +16,7 @@ namespace MyData.Infrastructure.Services
         public PostgresRequestStore(AppDbContext dbContext)
         {
             _dbContext = dbContext;
+            _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public async Task AddRangeAsync(Request[] requests)
@@ -23,10 +25,11 @@ namespace MyData.Infrastructure.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IPagedList<Request>> SearchAsync(DateTime @from, DateTime to, int pageNumber, int pageSize)
+        public Task<IPagedList<Request>> SearchAsync(DateTime @from, DateTime to, int pageNumber, int pageSize)
         {
-            return await _dbContext.Requests
+            return _dbContext.Requests
                 .Where(request => request.ServiceInvokedAt >= from && request.ServiceInvokedAt <= to)
+                .OrderBy(request => request.Id)
                 .ToPagedListAsync(pageNumber, pageSize);
         }
 

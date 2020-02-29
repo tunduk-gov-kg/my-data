@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using MyData.Core.Interfaces;
+using MyData.Infrastructure.EntityFrameworkCore;
+using MyData.Infrastructure.Services;
 
 namespace MyData.WebApi
 {
@@ -25,6 +22,11 @@ namespace MyData.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<AppDbContext>(builder =>
+                builder.UseNpgsql(Configuration.GetConnectionString("MyDataDb")));
+
+            services.AddScoped<IRequestStore, PostgresRequestStore>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,8 +35,10 @@ namespace MyData.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
+            else
+            {
+                app.UseHttpsRedirection();   
+            }
 
             app.UseRouting();
 
