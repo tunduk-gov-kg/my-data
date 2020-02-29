@@ -9,11 +9,11 @@ using X.PagedList;
 
 namespace MyData.Infrastructure.Services
 {
-    public class PostgresRequestStore : IRequestStore, IDisposable
+    public class RequestStore : IRequestStore, IDisposable
     {
         private readonly AppDbContext _dbContext;
 
-        public PostgresRequestStore(AppDbContext dbContext)
+        public RequestStore(AppDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;

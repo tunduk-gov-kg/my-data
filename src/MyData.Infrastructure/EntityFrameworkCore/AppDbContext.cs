@@ -7,6 +7,8 @@ namespace MyData.Infrastructure.EntityFrameworkCore
     {
         public DbSet<Request> Requests { get; set; }
 
+        public DbSet<Service> Services { get; set; }
+
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }
