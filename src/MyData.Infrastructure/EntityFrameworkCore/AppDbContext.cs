@@ -9,6 +9,8 @@ namespace MyData.Infrastructure.EntityFrameworkCore
 
         public DbSet<Service> Services { get; set; }
 
+        public DbSet<Log> Logs { get; set; }
+
         public AppDbContext(DbContextOptions options) : base(options)
         {
         }

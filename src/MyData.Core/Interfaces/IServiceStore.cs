@@ -8,6 +8,7 @@ namespace MyData.Core.Interfaces
     {
         Task<List<Service>> GetListAsync();
         
+        // ReSharper disable once ParameterTypeCanBeEnumerable.Global
         Task UpdateListAsync(List<Service> newList);
     }
 }
