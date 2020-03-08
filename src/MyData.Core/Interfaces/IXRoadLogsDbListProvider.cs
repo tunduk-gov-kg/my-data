@@ -3,8 +3,8 @@ using MyData.Core.Models;
 
 namespace MyData.Core.Interfaces
 {
-    public interface IRequestsProviderDb
+    public interface IXRoadLogsDbListProvider
     {
-        public List<RequestsProviderDb> List { get; }
+        public List<XRoadLogsDb> List { get; }
     }
 }

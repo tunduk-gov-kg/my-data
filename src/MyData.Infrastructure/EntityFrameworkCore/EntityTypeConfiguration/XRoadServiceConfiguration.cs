@@ -4,13 +4,12 @@ using MyData.Core.Models;
 
 namespace MyData.Infrastructure.EntityFrameworkCore.EntityTypeConfiguration
 {
-    public class RequestConfiguration : IEntityTypeConfiguration<Request>
+    public class XRoadServiceConfiguration : IEntityTypeConfiguration<XRoadService>
     {
-        public void Configure(EntityTypeBuilder<Request> builder)
+        public void Configure(EntityTypeBuilder<XRoadService> builder)
         {
-            builder.HasKey(request => request.Id);
-            
-            builder.Property(request => request.CreatedAt)
+            builder.HasKey(service => service.Id);
+            builder.Property(service => service.CreatedAt)
                 .HasValueGenerator<CurrentDateTimeGenerator>()
                 .ValueGeneratedOnAdd();
         }

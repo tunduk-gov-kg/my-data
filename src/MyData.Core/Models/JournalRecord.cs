@@ -2,7 +2,7 @@ using System;
 
 namespace MyData.Core.Models
 {
-    public class Log
+    public class JournalRecord
     {
         public long Id { get; set; }
 
@@ -14,7 +14,9 @@ namespace MyData.Core.Models
 
         public long FromIdInclusive { get; set; }
 
-        public long Limit { get; set; }
+        public long ToIdInclusive { get; set; }
+
+        public int ActualCount { get; set; }
 
         public string ErrorCode { get; set; }
 

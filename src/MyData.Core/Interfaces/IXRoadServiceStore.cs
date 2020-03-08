@@ -4,11 +4,11 @@ using MyData.Core.Models;
 
 namespace MyData.Core.Interfaces
 {
-    public interface IServiceStore
+    public interface IXRoadServiceStore
     {
-        Task<List<Service>> GetListAsync();
+        Task<List<XRoadService>> GetListAsync();
         
         // ReSharper disable once ParameterTypeCanBeEnumerable.Global
-        Task UpdateListAsync(List<Service> newList);
+        Task UpdateListAsync(List<XRoadService> newList);
     }
 }

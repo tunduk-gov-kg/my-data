@@ -26,8 +26,8 @@ namespace MyData.WebApi
             services.AddDbContext<AppDbContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("MyDataDb")));
 
-            services.AddScoped<IRequestStore, RequestStore>();
-            services.AddScoped<IServiceStore, ServiceStore>();
+            services.AddScoped<IXRoadRequestStore, XRoadRequestStore>();
+            services.AddScoped<IXRoadServiceStore, XRoadServiceStore>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

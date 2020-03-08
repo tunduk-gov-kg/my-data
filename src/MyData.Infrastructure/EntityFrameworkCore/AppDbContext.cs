@@ -5,11 +5,11 @@ namespace MyData.Infrastructure.EntityFrameworkCore
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Request> Requests { get; set; }
+        public DbSet<XRoadRequest> XRoadRequests { get; set; }
 
-        public DbSet<Service> Services { get; set; }
+        public DbSet<XRoadService> XRoadServices { get; set; }
 
-        public DbSet<Log> Logs { get; set; }
+        public DbSet<JournalRecord> Journal { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {

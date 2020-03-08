@@ -4,9 +4,9 @@ using MyData.Core.Models;
 
 namespace MyData.Infrastructure.EntityFrameworkCore.EntityTypeConfiguration
 {
-    public class LogConfiguration : IEntityTypeConfiguration<Log>
+    public class JournalRecordConfiguration : IEntityTypeConfiguration<JournalRecord>
     {
-        public void Configure(EntityTypeBuilder<Log> builder)
+        public void Configure(EntityTypeBuilder<JournalRecord> builder)
         {
             builder.HasKey(log => log.Id);
             

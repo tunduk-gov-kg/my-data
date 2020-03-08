@@ -3,7 +3,7 @@ namespace MyData.Core.Models
     /// <summary>
     /// Database where x-road requests are stored
     /// </summary>
-    public class RequestsProviderDb
+    public class XRoadLogsDb
     {
         public string Host { get; set; }
 

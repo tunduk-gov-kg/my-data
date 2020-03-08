@@ -2,7 +2,7 @@ using System;
 
 namespace MyData.Core.Models
 {
-    public class Service
+    public class XRoadService
     {
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }

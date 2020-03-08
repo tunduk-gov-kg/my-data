@@ -16,13 +16,13 @@ namespace MyData.WebApi.Controllers
     [Route("[controller]/[action]")]
     public class RequestsController : ControllerBase
     {
-        private readonly IRequestStore _requestStore;
+        private readonly IXRoadRequestStore _xoadRequestStore;
 
         private readonly ILogger<RequestsController> _logger;
 
-        public RequestsController(IRequestStore requestStore, ILogger<RequestsController> logger)
+        public RequestsController(IXRoadRequestStore requestStore, ILogger<RequestsController> logger)
         {
-            _requestStore = requestStore;
+            _xoadRequestStore = requestStore;
             _logger = logger;
         }
 
@@ -30,7 +30,7 @@ namespace MyData.WebApi.Controllers
         {
             _logger.LogInformation("Performing search with args: {0}",searchArgs.ToString());
 
-            var requests = await _requestStore.SearchAsync(searchArgs.FromInclusive, searchArgs.ToInclusive,
+            var requests = await _xoadRequestStore.SearchAsync(searchArgs.FromInclusive, searchArgs.ToInclusive,
                 searchArgs.PageNumber, searchArgs.PageSize);
 
             var response = new SearchRequestsResponse

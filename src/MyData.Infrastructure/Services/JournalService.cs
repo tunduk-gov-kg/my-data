@@ -9,31 +9,31 @@ using MyData.Infrastructure.EntityFrameworkCore;
 
 namespace MyData.Infrastructure.Services
 {
-    public class LogStore : ILogStore, IDisposable
+    public class JournalService : IJournalService, IDisposable
     {
         private readonly AppDbContext _dbContext;
 
-        public LogStore(AppDbContext dbContext)
+        public JournalService(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public async Task AddAsync(Log log)
+        public async Task AddAsync(JournalRecord journalRecord)
         {
-            await _dbContext.Logs.AddAsync(log);
+            await _dbContext.Journal.AddAsync(journalRecord);
         }
 
-        public async Task<List<Log>> SearchAsync(DateTime fromInclusive, DateTime toInclusive)
+        public async Task<List<JournalRecord>> SearchAsync(DateTime fromInclusive, DateTime toInclusive)
         {
-            return await _dbContext.Logs.OrderBy(log => log.Id)
+            return await _dbContext.Journal.OrderBy(log => log.Id)
                 .Where(log => log.CreatedAt >= fromInclusive)
                 .Where(log => log.CreatedAt <= toInclusive)
                 .ToListAsync();
         }
 
-        public Task<Log> LastOrDefaultAsync(string dbHost)
+        public Task<JournalRecord> LastOrDefaultAsync(string dbHost)
         {
-            return _dbContext.Logs.OrderBy(log => log.Id).LastOrDefaultAsync(log => log.DbHost.Equals(dbHost));
+            return _dbContext.Journal.OrderBy(log => log.Id).LastOrDefaultAsync(log => log.DbHost.Equals(dbHost));
         }
 
         public void Dispose()

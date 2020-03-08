@@ -5,11 +5,11 @@ using X.PagedList;
 
 namespace MyData.Core.Interfaces
 {
-    public interface IRequestStore
+    public interface IXRoadRequestStore
     {
-        Task AddRangeAsync(Request[] requests);
+        Task AddRangeAsync(XRoadRequest[] requests);
 
-        Task<IPagedList<Request>> SearchAsync(DateTime fromInclusive, DateTime toInclusive, int pageNumber,
+        Task<IPagedList<XRoadRequest>> SearchAsync(DateTime fromInclusive, DateTime toInclusive, int pageNumber,
             int pageSize);
 
         Task<int> PurgeAsync(DateTime fromInclusive, DateTime toInclusive);
