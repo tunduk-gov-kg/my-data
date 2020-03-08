@@ -9,12 +9,12 @@ namespace MyData.Core.Models
 
         // X-Road metadata
         public DateTime ServiceInvokedAt { get; set; }
-        
+
         public string ClientXRoadInstance { get; set; }
         public string ClientMemberClass { get; set; }
         public string ClientMemberCode { get; set; }
         public string ClientSubsystemCode { get; set; }
-        
+
         public string ServiceXRoadInstance { get; set; }
         public string ServiceMemberClass { get; set; }
         public string ServiceMemberCode { get; set; }
@@ -26,8 +26,20 @@ namespace MyData.Core.Models
         public string MessageId { get; set; }
         public string UserId { get; set; }
         public string MessageIssue { get; set; }
-        
+
         //Personal identification number passed as parameter to target service
         public string Pin { get; set; }
+
+
+        public XRoadService XRoadService =>
+            new XRoadService
+            {
+                XRoadInstance = ServiceXRoadInstance,
+                MemberClass = ServiceMemberClass,
+                MemberCode = ServiceMemberCode,
+                SubsystemCode = ServiceSubsystemCode,
+                ServiceCode = ServiceCode,
+                ServiceVersion = ServiceVersion
+            };
     }
 }

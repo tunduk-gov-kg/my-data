@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace MyData.Infrastructure.XRoad
             using var connection = new NpgsqlConnection(connectionString);
 
             var command = new NpgsqlCommand(
-                "select id,queryid,memberclass,membercode,subsystemcode,message,time,attachment,xrequestid,response from logrecord "
+                "select id,queryid,memberclass,membercode,subsystemcode,message,time,attachment,xrequestid,response,discriminator from logrecord "
                 + "where id >= @from_id_inclusive and id <= @to_id_inclusive "
                 + "order by id", connection
             );
@@ -52,7 +53,9 @@ namespace MyData.Infrastructure.XRoad
             while (reader.Read())
             {
                 var xRoadLog = Map(reader);
-                if (xRoadLog.Response) continue;
+
+                if (xRoadLog.Response || xRoadLog.Discriminator != "m") continue;
+
                 if (TryToParse(xRoadLog, out var request))
                 {
                     result.Add(request);
@@ -81,11 +84,25 @@ namespace MyData.Infrastructure.XRoad
 
         private bool TryToParse(XRoadLog xRoadLog, out XRoadRequest request)
         {
-            if (xRoadLog.Message.StartsWith('<')) //soap message body start
+            try
             {
-                var soapService = XRoadUtils.DetectSoapService(xRoadLog);
+                if (xRoadLog.Message.StartsWith('<')) //soap message body start
+                {
+                    var xRoadRequest = XRoadUtils.ParseSoap(xRoadLog);
 
-                if (_targetServices.Any(targetService => targetService.SameAs(soapService)))
+                    if (_targetServices.Any(targetService => targetService.SameAs(xRoadRequest.XRoadService))
+                        && xRoadRequest.Pin != null)
+                    {
+                        request = xRoadRequest;
+                        return true;
+                    }
+
+                    request = null;
+                    return false;
+                }
+
+                var restService = XRoadUtils.DetectRestService(xRoadLog);
+                if (_targetServices.Any(targetService => targetService.SameAs(restService)))
                 {
                     request = XRoadUtils.ParseSoap(xRoadLog);
                     return true;
@@ -94,16 +111,12 @@ namespace MyData.Infrastructure.XRoad
                 request = null;
                 return false;
             }
-
-            var restService = XRoadUtils.DetectRestService(xRoadLog);
-            if (_targetServices.Any(targetService => targetService.SameAs(restService)))
+            catch (Exception exception)
             {
-                request = XRoadUtils.ParseSoap(xRoadLog);
-                return true;
+                _logger.LogError(exception, nameof(TryToParse));
+                request = null;
+                return false;
             }
-
-            request = null;
-            return false;
         }
     }
 }

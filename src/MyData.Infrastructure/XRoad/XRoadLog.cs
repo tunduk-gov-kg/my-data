@@ -22,11 +22,13 @@ namespace MyData.Infrastructure.XRoad
 
         public bool Response { get; set; }
 
+        public string Discriminator { get; set; }
+
         public override string ToString()
         {
             return $"Id={Id},QueryId={QueryId}," +
                    $"MemberClass={MemberClass},MemberCode={MemberCode},SubSystemCode={SubSystemCode}" +
-                   $"Message={Message},Time={Time},Attachment={Attachment},XRequestId={XRequestId}";
+                   $"Message={Message},Time={Time},Attachment={Attachment},XRequestId={XRequestId},Response={Response},Discriminator={Discriminator}";
         }
     }
 }
