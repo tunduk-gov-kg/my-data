@@ -40,7 +40,7 @@ namespace MyData.Core.Models
                 XRoadInstance = identifiers[0],
                 MemberClass = identifiers[1],
                 MemberCode = identifiers[2],
-                SubsystemCode = identifiers.Length == 3 ? identifiers[3] : null
+                SubsystemCode = identifiers.Length == 4 ? identifiers[3] : null
             };
         }
     }
