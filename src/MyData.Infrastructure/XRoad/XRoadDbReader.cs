@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
-using MyData.Core.ExtensionMethods;
+using MyData.Core;
 using MyData.Core.Interfaces;
 using MyData.Core.Models;
 using Npgsql;
@@ -14,13 +17,16 @@ namespace MyData.Infrastructure.XRoad
     public class XRoadDbReader : IXRoadDbReader
     {
         private readonly ILogger<XRoadDbReader> _logger;
+        
+        private readonly IList<XRoadService> _restServices;
 
-        private readonly IList<XRoadService> _targetServices;
+        private readonly IList<XRoadService> _soapServices;
 
         public XRoadDbReader(ILogger<XRoadDbReader> logger, IList<XRoadService> targetServices)
         {
             _logger = logger;
-            _targetServices = targetServices;
+            _restServices = targetServices.Where(it => it.IsRestService).ToList();
+            _soapServices = targetServices.Where(it => !it.IsRestService).ToList();
         }
 
         public List<XRoadRequest> Read(XRoadLogsDb sourceDb, long fromIdInclusive, long toIdInclusive)
@@ -65,7 +71,7 @@ namespace MyData.Infrastructure.XRoad
             return result;
         }
 
-        private static XRoadLog Map(NpgsqlDataReader reader)
+        private static XRoadLog Map(DbDataReader reader)
         {
             return new XRoadLog
             {
@@ -86,30 +92,13 @@ namespace MyData.Infrastructure.XRoad
         {
             try
             {
+                // ReSharper disable once ConvertIfStatementToReturnStatement
                 if (xRoadLog.Message.StartsWith('<')) //soap message body start
                 {
-                    var xRoadRequest = XRoadUtils.ParseSoap(xRoadLog);
-
-                    if (_targetServices.Any(targetService => targetService.SameAs(xRoadRequest.XRoadService))
-                        && xRoadRequest.Pin != null)
-                    {
-                        request = xRoadRequest;
-                        return true;
-                    }
-
-                    request = null;
-                    return false;
+                    return TryToParseSoapMessage(xRoadLog, out request);
                 }
 
-                var restService = XRoadUtils.DetectRestService(xRoadLog);
-                if (_targetServices.Any(targetService => targetService.SameAs(restService)))
-                {
-                    request = XRoadUtils.ParseSoap(xRoadLog);
-                    return true;
-                }
-
-                request = null;
-                return false;
+                return TryToParseRestMessage(xRoadLog, out request);
             }
             catch (Exception exception)
             {
@@ -117,6 +106,59 @@ namespace MyData.Infrastructure.XRoad
                 request = null;
                 return false;
             }
+        }
+
+        // ReSharper disable once MemberCanBeMadeStatic.Local
+        private bool TryToParseRestMessage(XRoadLog xRoadLog, out XRoadRequest request)
+        {
+            var serviceCodeMatch = MyDataConstants.RegEx.XRoadRestServiceCodeRegex.Match(xRoadLog.Message);
+            if (serviceCodeMatch.Success)
+            {
+                var xRoadService = _restServices.FirstOrDefault(service => service.RestPathMatches(serviceCodeMatch.Value));
+                if (xRoadService == null)
+                {
+                    request = null;
+                    return false;
+                }
+
+                var clientMatch = MyDataConstants.RegEx.XRoadRestClientRegex.Match(xRoadLog.Message);
+                var xRoadClient = XRoadClient.From(clientMatch.Value.Replace("X-Road-Client:", string.Empty));
+                //TODO: complete rest message parse
+            }
+
+            request = null;
+            return false;
+        }
+
+        private bool TryToParseSoapMessage(XRoadLog xRoadLog, out XRoadRequest request)
+        {
+            var soapMessage = XDocument.Parse(xRoadLog.Message);
+
+            var xRoadService = XRoadSoapMessageUtils.ParseXRoadService(soapMessage);
+
+            if (_soapServices.Any(targetService => targetService.SameAs(xRoadService)))
+            {
+                var targetPin = XRoadSoapMessageUtils.ParsePin(soapMessage);
+
+                if (targetPin != null)
+                {
+                    request = new XRoadRequest();
+                    request.SetXRoadService(xRoadService);
+                    request.SetXRoadClient(XRoadSoapMessageUtils.ParseXRoadClient(soapMessage));
+
+                    request.Pin = targetPin;
+                    request.XRequestId = xRoadLog.XRequestId;
+                    request.UserId = XRoadSoapMessageUtils.ParseXRoadUserId(soapMessage);
+                    request.MessageId = XRoadSoapMessageUtils.ParseXRoadMessageId(soapMessage);
+                    request.MessageIssue = XRoadSoapMessageUtils.ParseXRoadMessageIssue(soapMessage);
+                    request.ServiceInvokedAt = DateTimeOffset.FromUnixTimeSeconds(xRoadLog.Time).UtcDateTime;
+
+                    return true;
+                }
+            }
+
+            request = null;
+            return false;
         }
     }
 }

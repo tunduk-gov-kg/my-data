@@ -29,17 +29,5 @@ namespace MyData.Core.Models
 
         //Personal identification number passed as parameter to target service
         public string Pin { get; set; }
-
-
-        public XRoadService XRoadService =>
-            new XRoadService
-            {
-                XRoadInstance = ServiceXRoadInstance,
-                MemberClass = ServiceMemberClass,
-                MemberCode = ServiceMemberCode,
-                SubsystemCode = ServiceSubsystemCode,
-                ServiceCode = ServiceCode,
-                ServiceVersion = ServiceVersion
-            };
     }
 }

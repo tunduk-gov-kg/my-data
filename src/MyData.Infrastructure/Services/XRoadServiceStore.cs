@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MyData.Core.ExtensionMethods;
 using MyData.Core.Interfaces;
 using MyData.Core.Models;
 using MyData.Infrastructure.EntityFrameworkCore;
