@@ -1,4 +1,4 @@
-create table "Services"
+create table "XRoadServices"
 (
     "Id"             bigserial                   not null primary key,
     "CreatedAt"      timestamp without time zone not null,
@@ -8,8 +8,9 @@ create table "Services"
     "MemberCode"     varchar(10)                 not null,
     "SubsystemCode"  varchar(200),
     "ServiceCode"    varchar(500)                not null,
-    "ServiceVersion" varchar(10)
+    "ServiceVersion" varchar(10),
+    "IsRestService"  bool                        not null
 );
 
-create unique index service_domain_id_ix on "Services" ("XRoadInstance", "MemberClass", "MemberCode", "SubsystemCode",
+create unique index service_domain_id_ix on "XRoadServices" ("XRoadInstance", "MemberClass", "MemberCode", "SubsystemCode",
                                                         "ServiceCode", "ServiceVersion");

@@ -1,4 +1,4 @@
-create table "Requests"
+create table "XRoadRequests"
 (
     "Id"                   bigserial                   not null primary key,
     "CreatedAt"            timestamp without time zone not null,
@@ -23,4 +23,4 @@ create table "Requests"
     "Pin"                  varchar(15)                 not null
 );
 
-create index service_invoked_at_ix on "Requests" ("ServiceInvokedAt");
+create index service_invoked_at_ix on "XRoadRequests" ("ServiceInvokedAt");

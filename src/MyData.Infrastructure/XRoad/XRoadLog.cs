@@ -20,7 +20,7 @@ namespace MyData.Infrastructure.XRoad
 
         public string XRequestId { get; set; }
 
-        public bool Response { get; set; }
+        public bool? Response { get; set; }
 
         public string Discriminator { get; set; }
 

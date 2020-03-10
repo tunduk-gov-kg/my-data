@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using MyData.Core.Interfaces;
 using MyData.Infrastructure.EntityFrameworkCore;
 using MyData.Infrastructure.Services;
+using MyData.Infrastructure.XRoad;
+using MyData.Infrastructure.XRoad.AutoMapper;
 
 namespace MyData.WebApi
 {
@@ -22,12 +25,14 @@ namespace MyData.WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddAutoMapper(typeof(XRoadProfile));
 
             services.AddDbContext<AppDbContext>(builder =>
                 builder.UseNpgsql(Configuration.GetConnectionString("MyDataDb")));
 
             services.AddScoped<IXRoadRequestStore, XRoadRequestStore>();
             services.AddScoped<IXRoadServiceStore, XRoadServiceStore>();
+            services.AddScoped<IXRoadDbReader, XRoadDbReader>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -38,7 +43,7 @@ namespace MyData.WebApi
             }
             else
             {
-                app.UseHttpsRedirection();   
+                app.UseHttpsRedirection();
             }
 
             app.UseRouting();
