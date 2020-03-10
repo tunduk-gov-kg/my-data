@@ -1,24 +1,21 @@
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using MyData.Core;
 using MyData.Core.Models;
 
 namespace MyData.Infrastructure.XRoad
 {
-    public class XRoadSoapMessageUtils
+    public static class XRoadSoapMessageUtils
     {
         public static string ParsePin(XDocument soapMessage)
         {
-            var regex = new Regex(MyDataConstants.KgzPinPattern);
-
             var soapMessageBody = soapMessage.Descendants()
                 .First(tag =>
                     tag.Name.LocalName.Equals("Body") &&
                     tag.Name.NamespaceName.Equals("http://schemas.xmlsoap.org/soap/envelope/"))
                 .ToString();
 
-            var match = regex.Match(soapMessageBody);
+            var match = MyDataConstants.RegEx.KgzPinRegex.Match(soapMessageBody);
 
             return match.Success ? match.Value : string.Empty;
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace MyData.Core.Models
 {
@@ -33,14 +34,16 @@ namespace MyData.Core.Models
 
         public static XRoadClient From(string restPath)
         {
-            var identifiers = restPath.Split('/');
+            var ids = restPath.Split('/')
+                .Where(id => !string.IsNullOrWhiteSpace(id))
+                .ToList();
 
             return new XRoadClient
             {
-                XRoadInstance = identifiers[0],
-                MemberClass = identifiers[1],
-                MemberCode = identifiers[2],
-                SubsystemCode = identifiers.Length == 3 ? identifiers[3] : null
+                XRoadInstance = ids[0],
+                MemberClass = ids[1],
+                MemberCode = ids[2],
+                SubsystemCode = ids.Count == 4 ? ids[3] : null
             };
         }
     }

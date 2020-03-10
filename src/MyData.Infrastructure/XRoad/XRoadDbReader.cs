@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
-using MyData.Core;
 using MyData.Core.Interfaces;
 using MyData.Core.Models;
 using Npgsql;
@@ -17,14 +14,17 @@ namespace MyData.Infrastructure.XRoad
     public class XRoadDbReader : IXRoadDbReader
     {
         private readonly ILogger<XRoadDbReader> _logger;
-        
+
         private readonly IList<XRoadService> _restServices;
 
         private readonly IList<XRoadService> _soapServices;
 
-        public XRoadDbReader(ILogger<XRoadDbReader> logger, IList<XRoadService> targetServices)
+        private readonly IMapper _mapper;
+
+        public XRoadDbReader(ILogger<XRoadDbReader> logger, IList<XRoadService> targetServices, IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
             _restServices = targetServices.Where(it => it.IsRestService).ToList();
             _soapServices = targetServices.Where(it => !it.IsRestService).ToList();
         }
@@ -58,7 +58,7 @@ namespace MyData.Infrastructure.XRoad
 
             while (reader.Read())
             {
-                var xRoadLog = Map(reader);
+                var xRoadLog = _mapper.Map<XRoadLog>(reader);
 
                 if (xRoadLog.Response || xRoadLog.Discriminator != "m") continue;
 
@@ -69,23 +69,6 @@ namespace MyData.Infrastructure.XRoad
             }
 
             return result;
-        }
-
-        private static XRoadLog Map(DbDataReader reader)
-        {
-            return new XRoadLog
-            {
-                Id = reader.GetInt64("id"),
-                QueryId = !reader.IsDBNull("queryid") ? reader.GetString("queryid") : null,
-                MemberClass = reader.GetString("memberclass"),
-                MemberCode = reader.GetString("membercode"),
-                SubSystemCode = !reader.IsDBNull("subsystemcode") ? reader.GetString("subsystemcode") : null,
-                Message = reader.GetString("message"),
-                Time = reader.GetInt64("time"),
-                Attachment = !reader.IsDBNull("attachment") ? reader.GetInt64("attachment") : (long?) null,
-                XRequestId = !reader.IsDBNull("xrequestid") ? reader.GetString("xrequestid") : null,
-                Response = reader.GetBoolean("response")
-            };
         }
 
         private bool TryToParse(XRoadLog xRoadLog, out XRoadRequest request)
@@ -111,19 +94,34 @@ namespace MyData.Infrastructure.XRoad
         // ReSharper disable once MemberCanBeMadeStatic.Local
         private bool TryToParseRestMessage(XRoadLog xRoadLog, out XRoadRequest request)
         {
-            var serviceCodeMatch = MyDataConstants.RegEx.XRoadRestServiceCodeRegex.Match(xRoadLog.Message);
-            if (serviceCodeMatch.Success)
+            var restPathMatch = XRoadRestMessageUtils.MatchServiceRestPath(xRoadLog.Message);
+            if (restPathMatch.Success)
             {
-                var xRoadService = _restServices.FirstOrDefault(service => service.RestPathMatches(serviceCodeMatch.Value));
+                var xRoadService = XRoadRestMessageUtils.FindMatchingRestPath(_restServices, restPathMatch.Value);
                 if (xRoadService == null)
                 {
                     request = null;
                     return false;
                 }
 
-                var clientMatch = MyDataConstants.RegEx.XRoadRestClientRegex.Match(xRoadLog.Message);
-                var xRoadClient = XRoadClient.From(clientMatch.Value.Replace("X-Road-Client:", string.Empty));
-                //TODO: complete rest message parse
+                //search pin in service path/query parameters
+                var targetPin = XRoadRestMessageUtils.ParsePin(restPathMatch.Value);
+                if (targetPin != null)
+                {
+                    //TODO: implemented pin search in rest message body
+                    // rest message body is stored in postgres large objects table
+                    // xroadlog references them by attachment oid                    
+                    request = new XRoadRequest();
+                    request.SetXRoadService(xRoadService);
+                    request.SetXRoadClient(XRoadRestMessageUtils.ParseXRoadClient(xRoadLog.Message));
+                    request.Pin = targetPin;
+                    request.XRequestId = xRoadLog.XRequestId;
+                    request.UserId = XRoadRestMessageUtils.ParseXRoadUserId(xRoadLog.Message);
+                    request.MessageId = XRoadRestMessageUtils.ParseXRoadMessageId(xRoadLog.Message);
+                    request.MessageIssue = XRoadRestMessageUtils.ParseXRoadMessageIssue(xRoadLog.Message);
+                    request.ServiceInvokedAt = DateTimeOffset.FromUnixTimeSeconds(xRoadLog.Time).UtcDateTime;
+                    return true;
+                }
             }
 
             request = null;
@@ -139,20 +137,17 @@ namespace MyData.Infrastructure.XRoad
             if (_soapServices.Any(targetService => targetService.SameAs(xRoadService)))
             {
                 var targetPin = XRoadSoapMessageUtils.ParsePin(soapMessage);
-
                 if (targetPin != null)
                 {
                     request = new XRoadRequest();
                     request.SetXRoadService(xRoadService);
                     request.SetXRoadClient(XRoadSoapMessageUtils.ParseXRoadClient(soapMessage));
-
                     request.Pin = targetPin;
                     request.XRequestId = xRoadLog.XRequestId;
                     request.UserId = XRoadSoapMessageUtils.ParseXRoadUserId(soapMessage);
                     request.MessageId = XRoadSoapMessageUtils.ParseXRoadMessageId(soapMessage);
                     request.MessageIssue = XRoadSoapMessageUtils.ParseXRoadMessageIssue(soapMessage);
                     request.ServiceInvokedAt = DateTimeOffset.FromUnixTimeSeconds(xRoadLog.Time).UtcDateTime;
-
                     return true;
                 }
             }
