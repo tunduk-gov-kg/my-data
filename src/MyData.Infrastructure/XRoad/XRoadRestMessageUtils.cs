@@ -38,7 +38,7 @@ namespace MyData.Infrastructure.XRoad
             foreach (Match match in matchCollection)
             {
                 if (match.Value.Length != MyDataConstants.KgzPinLength) continue;
-                var pinMatch = MyDataConstants.RegEx.KgzPinRegex.Match(parseText);
+                var pinMatch = MyDataConstants.RegEx.KgzPinRegex.Match(match.Value);
                 if (pinMatch.Success)
                 {
                     return pinMatch.Value;

@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{AB8E5C1B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyData.WebApi.Tests", "tests\MyData.WebApi.Tests\MyData.WebApi.Tests.csproj", "{3CC8F8E7-18EA-4AC4-A704-6F8D68037749}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyData.Infrastructure.Tests", "tests\MyData.Infrastructure.Tests\MyData.Infrastructure.Tests.csproj", "{31475668-3FE7-412B-8529-B217DA37C265}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,7 @@ Global
 		{F134EA90-EC29-46C4-91D7-B732FBB57B2E} = {D208B019-D25B-4679-83BB-1685511CFC46}
 		{B84FB614-534D-4BED-A48D-41507BA0D314} = {D208B019-D25B-4679-83BB-1685511CFC46}
 		{3CC8F8E7-18EA-4AC4-A704-6F8D68037749} = {AB8E5C1B-51D0-417B-94BF-54F532BE7D7D}
+		{31475668-3FE7-412B-8529-B217DA37C265} = {AB8E5C1B-51D0-417B-94BF-54F532BE7D7D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{A579092D-41F4-4200-81DF-8B0CFA2A5E66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -40,5 +43,9 @@ Global
 		{3CC8F8E7-18EA-4AC4-A704-6F8D68037749}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CC8F8E7-18EA-4AC4-A704-6F8D68037749}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CC8F8E7-18EA-4AC4-A704-6F8D68037749}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31475668-3FE7-412B-8529-B217DA37C265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31475668-3FE7-412B-8529-B217DA37C265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31475668-3FE7-412B-8529-B217DA37C265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31475668-3FE7-412B-8529-B217DA37C265}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
