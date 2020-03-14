@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace MyData.Infrastructure.Services
             _dbContext.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
-        public async Task AddRangeAsync(XRoadRequest[] requests)
+        public async Task AddRangeAsync(List<XRoadRequest> requests)
         {
             await _dbContext.XRoadRequests.AddRangeAsync(requests);
             await _dbContext.SaveChangesAsync();

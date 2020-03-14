@@ -1,14 +1,12 @@
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using MyData.Core;
 using MyData.Core.Models;
 
 namespace MyData.Infrastructure.XRoad
 {
     public static class XRoadSoapMessageUtils
     {
-        public static string ParsePin(XDocument soapMessage)
+        public static string ParsePin(XDocument soapMessage, string withPattern)
         {
             var soapMessageBody = soapMessage.Descendants()
                 .First(tag =>
@@ -16,18 +14,7 @@ namespace MyData.Infrastructure.XRoad
                     tag.Name.NamespaceName.Equals("http://schemas.xmlsoap.org/soap/envelope/"))
                 .ToString();
 
-            var matchCollection = Regex.Matches(soapMessageBody, "\\d+");
-            foreach (Match match in matchCollection)
-            {
-                if (match.Value.Length != MyDataConstants.KgzPinLength) continue;
-                var pinMatch = MyDataConstants.RegEx.KgzPinRegex.Match(match.Value);
-                if (pinMatch.Success)
-                {
-                    return pinMatch.Value;
-                }
-            }
-
-            return null;
+            return PinSearchUtil.ParsePin(soapMessageBody, withPattern);
         }
 
         public static string ParseXRoadMessageId(XDocument soapMessage)

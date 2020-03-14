@@ -1,4 +1,4 @@
-namespace MyData.Infrastructure.XRoad
+namespace MyData.Core.Models
 {
     public class XRoadLog
     {

@@ -1,5 +1,6 @@
 using System.Data.Common;
 using AutoMapper;
+using MyData.Core.Models;
 
 namespace MyData.Infrastructure.XRoad.AutoMapper
 {

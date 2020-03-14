@@ -32,20 +32,9 @@ namespace MyData.Infrastructure.XRoad
             return XRoadClient.From(restPath);
         }
 
-        public static string ParsePin(string parseText)
+        public static string ParsePin(string parseText, string withPattern)
         {
-            var matchCollection = Regex.Matches(parseText, "\\d+");
-            foreach (Match match in matchCollection)
-            {
-                if (match.Value.Length != MyDataConstants.KgzPinLength) continue;
-                var pinMatch = MyDataConstants.RegEx.KgzPinRegex.Match(match.Value);
-                if (pinMatch.Success)
-                {
-                    return pinMatch.Value;
-                }
-            }
-
-            return null;
+            return PinSearchUtil.ParsePin(parseText, withPattern);
         }
 
         public static string ParseXRoadMessageId(string xRoadRequest)

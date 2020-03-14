@@ -10,12 +10,12 @@ namespace MyData.Core.Models
 
         public string DbHost { get; set; }
 
-        public string DbPort { get; set; }
+        public int DbPort { get; set; }
 
         public long FromIdInclusive { get; set; }
 
         public long ToIdInclusive { get; set; }
-
+        
         public int ActualCount { get; set; }
 
         public string ErrorCode { get; set; }

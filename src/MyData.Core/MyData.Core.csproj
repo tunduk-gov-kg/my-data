@@ -8,8 +8,4 @@
       <PackageReference Include="X.PagedList" Version="7.9.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="ExtensionMethods" />
-    </ItemGroup>
-
 </Project>
