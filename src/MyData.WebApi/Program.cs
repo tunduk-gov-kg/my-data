@@ -13,9 +13,8 @@ namespace MyData.WebApi
             var host = CreateHostBuilder(args).Build();
             host.Services.UseScheduler(scheduler =>
             {
-                scheduler.Schedule<LogsCollectorTask>()
-                    .EverySeconds(10);
-                    // .Daily();
+                scheduler.Schedule<LogsCollectorTask>().Daily();
+                scheduler.Schedule<RequestsCleanerTask>().DailyAtHour(6);
             });
 
             host.Run();
@@ -27,6 +26,7 @@ namespace MyData.WebApi
                 {
                     services.AddScheduler();
                     services.AddTransient<LogsCollectorTask>();
+                    services.AddTransient<RequestsCleanerTask>();
                     services.AddSingleton<IStartupFilter, Migration>();
                 })
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
