@@ -49,6 +49,7 @@ namespace MyData.WebApi.Controllers
             return response;
         }
 
+        // ReSharper disable once MemberCanBeMadeStatic.Local
         private async Task<string> ToGzip(byte[] bytes)
         {
             await using var outputStream = new MemoryStream();

@@ -4,6 +4,7 @@ using Coravel.Invocable;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MyData.Core.Interfaces;
+using MyData.WebApi.Services;
 using Nito.AsyncEx.Synchronous;
 
 namespace MyData.WebApi.BackgroundService

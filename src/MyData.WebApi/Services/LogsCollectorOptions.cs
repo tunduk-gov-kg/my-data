@@ -1,4 +1,4 @@
-namespace MyData.WebApi.BackgroundService
+namespace MyData.WebApi.Services
 {
     public class LogsCollectorOptions
     {
