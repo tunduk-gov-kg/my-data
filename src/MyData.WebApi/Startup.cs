@@ -13,6 +13,7 @@ using MyData.Infrastructure.EntityFrameworkCore;
 using MyData.Infrastructure.Services;
 using MyData.Infrastructure.XRoad;
 using MyData.Infrastructure.XRoad.AutoMapper;
+using MyData.WebApi.Services;
 
 namespace MyData.WebApi
 {

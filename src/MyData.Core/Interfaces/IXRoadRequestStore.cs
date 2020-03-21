@@ -13,6 +13,6 @@ namespace MyData.Core.Interfaces
         Task<IPagedList<XRoadRequest>> SearchAsync(DateTime fromInclusive, DateTime toInclusive, int pageNumber,
             int pageSize);
 
-        Task<int> PurgeAsync(DateTime fromInclusive, DateTime toInclusive);
+        Task<int> PurgeAsync(DateTime untilInclusive);
     }
 }

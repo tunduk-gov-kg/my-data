@@ -5,10 +5,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyData.Core.Interfaces;
 using MyData.Core.Models;
-using MyData.WebApi.BackgroundService;
 using Nito.AsyncEx.Synchronous;
 
-namespace MyData.WebApi
+namespace MyData.WebApi.Services
 {
     public class LogsCollectorService
     {
@@ -72,7 +71,7 @@ namespace MyData.WebApi
                 catch (Exception exception)
                 {
                     journal.SetException(exception);
-                    _logger.LogError(exception, "Error occurred LogsCollectorService execution");
+                    _logger.LogError(exception, "Error occurred during LogsCollectorService execution");
                     await _journalService.AddAsync(journal.Build());
                     break;
                 }
@@ -84,14 +83,12 @@ namespace MyData.WebApi
             var collectResult = new CollectResult();
 
             var logsReadResult = _xRoadDbReader.Read(targetDb, fromIdInclusive, limit);
-
-            if (!logsReadResult.Any())
+            if (!logsReadResult.Any()) //assert logs present
             {
-                return collectResult;
+                throw new ApplicationException();
             }
 
             var xRoadRequests = _logsProcessor.Process(logsReadResult);
-
             _requestStore.AddRangeAsync(xRoadRequests).WaitAndUnwrapException();
 
             collectResult.Count = logsReadResult.Count;

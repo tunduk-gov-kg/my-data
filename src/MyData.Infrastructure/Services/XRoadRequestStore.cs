@@ -34,9 +34,11 @@ namespace MyData.Infrastructure.Services
                 .ToPagedListAsync(pageNumber, pageSize);
         }
 
-        public Task<int> PurgeAsync(DateTime @from, DateTime to)
+        public Task<int> PurgeAsync(DateTime untilInclusive)
         {
-            throw new NotImplementedException();
+            //npgsql command
+            return _dbContext.Database.ExecuteSqlRawAsync(
+                $"delete from \"XRoadRequests\" where \"CreatedAt\" <= '{untilInclusive.Date:O}'");
         }
 
         public void Dispose()
