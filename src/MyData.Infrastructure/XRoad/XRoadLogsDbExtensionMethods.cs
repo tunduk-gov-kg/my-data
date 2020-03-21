@@ -12,7 +12,8 @@ namespace MyData.Infrastructure.XRoad
                 Host = sourceDb.Host,
                 Port = sourceDb.Port,
                 Username = sourceDb.Username,
-                Password = sourceDb.Password
+                Password = sourceDb.Password,
+                Database = sourceDb.Database,
             };
             return connectionStringBuilder.ConnectionString;
         }

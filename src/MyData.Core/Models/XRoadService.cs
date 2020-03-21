@@ -29,6 +29,8 @@ namespace MyData.Core.Models
 
         public bool IsRestService { get; set; }
 
+        public string ParseRule { get; set; }
+
         public bool SameAs(XRoadService service)
         {
             return XRoadInstance.Equals(service.XRoadInstance)
@@ -50,7 +52,7 @@ namespace MyData.Core.Models
 
             stringBuilder.Append($"/{ServiceCode}");
             var restServicePath = stringBuilder.ToString();
-            return path.Contains(restServicePath,StringComparison.InvariantCultureIgnoreCase);
+            return path.Contains(restServicePath, StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

@@ -27,32 +27,38 @@ namespace MyData.Infrastructure.XRoad
                 throw new ArgumentException("x-road-client header is required");
             }
 
-            var restPath = clientMatch.Value.Replace("x-road-client:", string.Empty);
+            var restPath = clientMatch.Value.Replace("x-road-client:", string.Empty,
+                StringComparison.InvariantCultureIgnoreCase);
             return XRoadClient.From(restPath);
         }
 
-        public static string ParsePin(string contextContent)
+        public static string ParsePin(string parseText, string withPattern)
         {
-            var pinMatch = MyDataConstants.RegEx.KgzPinRegex.Match(contextContent);
-            return pinMatch.Success ? pinMatch.Value : null;
+            return PinSearchUtil.ParsePin(parseText, withPattern);
         }
 
         public static string ParseXRoadMessageId(string xRoadRequest)
         {
             var messageIdMatch = MyDataConstants.RegEx.XRoadIdRegex.Match(xRoadRequest);
-            return messageIdMatch.Success ? messageIdMatch.Value.Replace("x-road-id:", string.Empty) : null;
+            return messageIdMatch.Success
+                ? messageIdMatch.Value.Replace("x-road-id:", string.Empty, StringComparison.InvariantCultureIgnoreCase)
+                : null;
         }
 
         public static string ParseXRoadMessageIssue(string xRoadRequest)
         {
             var issueMatch = MyDataConstants.RegEx.XRoadIssueRegex.Match(xRoadRequest);
-            return issueMatch.Success ? issueMatch.Value.Replace("x-road-issue:", string.Empty) : null;
+            return issueMatch.Success
+                ? issueMatch.Value.Replace("x-road-issue:", string.Empty, StringComparison.InvariantCultureIgnoreCase)
+                : null;
         }
 
         public static string ParseXRoadUserId(string xRoadRequest)
         {
             var userIdMatch = MyDataConstants.RegEx.XRoadUserIdRegex.Match(xRoadRequest);
-            return userIdMatch.Success ? userIdMatch.Value.Replace("x-road-userid:", string.Empty) : null;
+            return userIdMatch.Success
+                ? userIdMatch.Value.Replace("x-road-userid:", string.Empty, StringComparison.InvariantCultureIgnoreCase)
+                : null;
         }
     }
 }

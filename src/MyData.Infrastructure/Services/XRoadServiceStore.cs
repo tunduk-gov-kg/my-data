@@ -23,6 +23,20 @@ namespace MyData.Infrastructure.Services
             return _dbContext.XRoadServices.ToListAsync();
         }
 
+        public Task<List<XRoadService>> GetRestServicesAsync()
+        {
+            return _dbContext.XRoadServices
+                .Where(service => service.IsRestService)
+                .ToListAsync();
+        }
+
+        public Task<List<XRoadService>> GetSoapServicesAsync()
+        {
+            return _dbContext.XRoadServices
+                .Where(service => !service.IsRestService)
+                .ToListAsync();
+        }
+
         public async Task UpdateListAsync(List<XRoadService> newList)
         {
             var oldList = await GetListAsync();

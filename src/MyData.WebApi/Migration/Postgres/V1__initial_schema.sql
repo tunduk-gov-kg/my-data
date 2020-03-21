@@ -1,4 +1,4 @@
-create table "Requests"
+create table "XRoadRequests"
 (
     "Id"                   bigserial                   not null primary key,
     "CreatedAt"            timestamp without time zone not null,
@@ -17,10 +17,10 @@ create table "Requests"
     "ServiceVersion"       varchar(10),
 
     "XRequestId"           varchar(100),
-    "MessageId"            varchar(100)                not null,
-    "UserId"               varchar(100)                not null,
+    "MessageId"            varchar(100),
+    "UserId"               varchar(100),
     "MessageIssue"         text,
     "Pin"                  varchar(15)                 not null
 );
 
-create index service_invoked_at_ix on "Requests" ("ServiceInvokedAt");
+create index service_invoked_at_ix on "XRoadRequests" ("ServiceInvokedAt");

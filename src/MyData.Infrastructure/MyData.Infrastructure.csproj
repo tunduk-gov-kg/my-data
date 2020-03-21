@@ -10,6 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="9.0.0" />
+      <PackageReference Include="Nito.AsyncEx" Version="5.0.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.2" />
     </ItemGroup>
 

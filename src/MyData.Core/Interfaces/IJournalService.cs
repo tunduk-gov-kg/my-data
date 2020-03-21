@@ -11,6 +11,6 @@ namespace MyData.Core.Interfaces
 
         public Task<List<JournalRecord>> SearchAsync(DateTime fromInclusive, DateTime toInclusive);
 
-        public Task<JournalRecord> LastOrDefaultAsync(string dbHost);
+        public Task<JournalRecord> GetLastSucceededOperationAsync(string dbHost);
     }
 }

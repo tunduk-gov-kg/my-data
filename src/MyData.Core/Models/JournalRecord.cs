@@ -10,18 +10,22 @@ namespace MyData.Core.Models
 
         public string DbHost { get; set; }
 
-        public string DbPort { get; set; }
-
+        public int DbPort { get; set; }
+        
+        //where id >= fromIdInclusive
         public long FromIdInclusive { get; set; }
 
-        public long ToIdInclusive { get; set; }
-
-        public int ActualCount { get; set; }
-
+        //order by id limit @limit
+        public int Limit { get; set; }
+        
+        public long LastRecordId { get; set; }
+        
+        public int ParsedCount { get; set; }
+        
+        public bool Succeeded { get; set; }
+        
         public string ErrorCode { get; set; }
 
         public string ErrorDescription { get; set; }
-
-        public bool Succeeded { get; set; }
     }
 }
