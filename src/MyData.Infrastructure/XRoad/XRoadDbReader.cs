@@ -4,6 +4,7 @@ using MyData.Core.Interfaces;
 using MyData.Core.Models;
 using Npgsql;
 using NpgsqlTypes;
+// ReSharper disable StringLiteralTypo
 
 namespace MyData.Infrastructure.XRoad
 {
@@ -19,25 +20,26 @@ namespace MyData.Infrastructure.XRoad
             _mapper = mapper;
         }
 
-        public XRoadLogsReadResult Read(XRoadLogsDb sourceDb, long fromIdInclusive, long toIdInclusive)
+        public XRoadLogsReadResult Read(XRoadLogsDb sourceDb, long fromIdInclusive, int limit)
         {
             _logger.LogInformation("Requesting x-road logs from db: {0}, ids: [{1},{2}]", sourceDb.Host,
-                fromIdInclusive, toIdInclusive);
+                fromIdInclusive, limit);
 
-            var result = new XRoadLogsReadResult(fromIdInclusive, toIdInclusive);
+            var result = new XRoadLogsReadResult();
 
             var connectionString = sourceDb.BuildConnectionString();
             using var connection = new NpgsqlConnection(connectionString);
 
             var command = new NpgsqlCommand(
                 "select id,queryid,memberclass,membercode,subsystemcode,message,time,attachment,xrequestid,response,discriminator from logrecord "
-                + "where id >= @from_id_inclusive and id <= @to_id_inclusive "
-                + "order by id", connection
+                + "where id >= @from_id_inclusive "
+                + "order by id "
+                + "limit @limit", connection
             );
 
             command.Parameters.AddWithValue("from_id_inclusive", NpgsqlDbType.Bigint, fromIdInclusive);
-            command.Parameters.AddWithValue("to_id_inclusive", NpgsqlDbType.Bigint, toIdInclusive);
-
+            command.Parameters.AddWithValue("limit", NpgsqlDbType.Integer, limit);
+            
             connection.Open();
 
             using var reader = command.ExecuteReader();
@@ -49,10 +51,22 @@ namespace MyData.Infrastructure.XRoad
             while (reader.Read())
             {
                 var xRoadLog = _mapper.Map<XRoadLog>(reader);
-                result.XRoadLogs.Add(xRoadLog);
+                result.Add(xRoadLog);
             }
 
             return result;
+        }
+
+        public bool AnyRecords(XRoadLogsDb sourceDb, long fromIdInclusive)
+        {
+            var connectionString = sourceDb.BuildConnectionString();
+            using var connection = new NpgsqlConnection(connectionString);
+            var command = new NpgsqlCommand("select count(*) from logrecord where id >= @from_id_inclusive", connection);
+            command.Parameters.AddWithValue("from_id_inclusive", NpgsqlDbType.Bigint, fromIdInclusive);
+            connection.Open();
+            var result = (long) command.ExecuteScalar();
+            connection.Close();
+            return result > 0;
         }
     }
 }

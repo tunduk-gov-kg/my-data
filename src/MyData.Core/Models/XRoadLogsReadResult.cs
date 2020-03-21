@@ -5,27 +5,11 @@ using System.Linq;
 
 namespace MyData.Core.Models
 {
-    public class XRoadLogsReadResult
+    public class XRoadLogsReadResult : List<XRoadLog>
     {
-        public XRoadLogsReadResult(long fromIdInclusive, long toIdInclusive)
-        {
-            FromIdInclusive = fromIdInclusive;
-            ToIdInclusive = toIdInclusive;
-        }
-
-        public List<XRoadLog> XRoadLogs { get; set; } = new List<XRoadLog>();
-
-        private long FromIdInclusive { get; set; }
-
-        private long ToIdInclusive { get; set; }
-
-        public bool IsLast => XRoadLogs.Count == 0 || LastRecordId != ToIdInclusive;
-
-        public long NextToIdInclusive => LastRecordId + 1;
-
         public long LastRecordId
         {
-            get { return XRoadLogs.Max(log => log.Id); }
+            get { return this.Max(log => log.Id); }
         }
     }
 }

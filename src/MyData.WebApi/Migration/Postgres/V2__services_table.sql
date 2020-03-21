@@ -9,8 +9,10 @@ create table "XRoadServices"
     "SubsystemCode"  varchar(200),
     "ServiceCode"    varchar(500)                not null,
     "ServiceVersion" varchar(10),
-    "IsRestService"  bool                        not null
+    "IsRestService"  bool                        not null,
+    "ParseRule"      varchar(500)
 );
 
-create unique index service_domain_id_ix on "XRoadServices" ("XRoadInstance", "MemberClass", "MemberCode", "SubsystemCode",
-                                                        "ServiceCode", "ServiceVersion");
+create unique index service_domain_id_ix on "XRoadServices" ("XRoadInstance", "MemberClass", "MemberCode",
+                                                             "SubsystemCode",
+                                                             "ServiceCode", "ServiceVersion");

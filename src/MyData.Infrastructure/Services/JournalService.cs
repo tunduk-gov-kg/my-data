@@ -21,6 +21,7 @@ namespace MyData.Infrastructure.Services
         public async Task AddAsync(JournalRecord journalRecord)
         {
             await _dbContext.Journal.AddAsync(journalRecord);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task<List<JournalRecord>> SearchAsync(DateTime fromInclusive, DateTime toInclusive)
@@ -31,9 +32,11 @@ namespace MyData.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public Task<JournalRecord> LastOrDefaultAsync(string dbHost)
+        public Task<JournalRecord> GetLastSucceededOperationAsync(string dbHost)
         {
-            return _dbContext.Journal.OrderBy(log => log.Id).LastOrDefaultAsync(log => log.DbHost.Equals(dbHost));
+            return _dbContext.Journal.OrderBy(log => log.Id)
+                .Where(log => log.Succeeded)
+                .LastOrDefaultAsync(log => log.DbHost.Equals(dbHost));
         }
 
         public void Dispose()

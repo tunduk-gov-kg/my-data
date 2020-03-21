@@ -4,6 +4,8 @@ namespace MyData.Core.Interfaces
 {
     public interface IXRoadDbReader
     {
-        XRoadLogsReadResult Read(XRoadLogsDb sourceDb, long fromIdInclusive, long toIdInclusive);
+        XRoadLogsReadResult Read(XRoadLogsDb sourceDb, long fromIdInclusive, int limit);
+
+        bool AnyRecords(XRoadLogsDb sourceDb, long fromIdInclusive);
     }
 }
