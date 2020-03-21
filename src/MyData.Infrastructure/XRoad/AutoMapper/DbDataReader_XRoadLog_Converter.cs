@@ -21,7 +21,8 @@ namespace MyData.Infrastructure.XRoad.AutoMapper
                 Time = source.GetInt64("time"),
                 Attachment = !source.IsDBNull("attachment") ? source.GetInt64("attachment") : (long?) null,
                 XRequestId = !source.IsDBNull("xrequestid") ? source.GetString("xrequestid") : null,
-                Response = !source.IsDBNull("response") ? source.GetBoolean("response") : (bool?) null
+                Response = !source.IsDBNull("response") ? source.GetBoolean("response") : (bool?) null,
+                Discriminator = !source.IsDBNull("discriminator") ? source.GetString("discriminator") : null
             };
         }
     }

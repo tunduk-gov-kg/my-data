@@ -95,9 +95,7 @@ namespace MyData.WebApi
             _requestStore.AddRangeAsync(xRoadRequests).WaitAndUnwrapException();
 
             collectResult.Count = logsReadResult.Count;
-
             collectResult.ParsedCount = xRoadRequests.Count;
-
             collectResult.LastRecordId = logsReadResult.LastRecordId;
 
             return collectResult;

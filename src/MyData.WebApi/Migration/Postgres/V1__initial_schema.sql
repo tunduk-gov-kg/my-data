@@ -17,8 +17,8 @@ create table "XRoadRequests"
     "ServiceVersion"       varchar(10),
 
     "XRequestId"           varchar(100),
-    "MessageId"            varchar(100)                not null,
-    "UserId"               varchar(100)                not null,
+    "MessageId"            varchar(100),
+    "UserId"               varchar(100),
     "MessageIssue"         text,
     "Pin"                  varchar(15)                 not null
 );

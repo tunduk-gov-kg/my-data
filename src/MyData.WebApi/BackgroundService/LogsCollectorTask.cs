@@ -4,6 +4,7 @@ using Coravel.Invocable;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MyData.Core.Interfaces;
+using Nito.AsyncEx.Synchronous;
 
 namespace MyData.WebApi.BackgroundService
 {
@@ -29,12 +30,15 @@ namespace MyData.WebApi.BackgroundService
             Parallel.ForEach(_xRoadDbListProvider.List, async targetDb =>
             {
                 _logger.LogInformation("Processing db: host - {0}, port - {1}, dbname - {2}", targetDb.Host,targetDb.Port,targetDb.Database);
+                
                 using var serviceScope = _serviceProvider.CreateScope();
                 var collectorService = serviceScope.ServiceProvider.GetRequiredService<LogsCollectorService>();
-                await collectorService.Collect(targetDb);
+                collectorService.Collect(targetDb).WaitAndUnwrapException();
             });
             
             _logger.LogInformation("LogsCollectorTask completed");
+
+            await Task.CompletedTask;
         }
     }
 }
