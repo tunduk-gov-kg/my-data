@@ -5,6 +5,6 @@ namespace MyData.Core.Interfaces
 {
     public interface IXRoadLogsDbListProvider
     {
-        public List<XRoadLogsDb> List { get; }
+        List<XRoadLogsDb> List { get; }
     }
 }

@@ -18,7 +18,7 @@ namespace MyData.Infrastructure.Services
             _dbContext = dbContext;
         }
 
-        public Task<List<XRoadService>> GetListAsync()
+        private Task<List<XRoadService>> GetListAsync()
         {
             return _dbContext.XRoadServices.ToListAsync();
         }

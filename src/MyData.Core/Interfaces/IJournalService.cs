@@ -7,10 +7,10 @@ namespace MyData.Core.Interfaces
 {
     public interface IJournalService
     {
-        public Task AddAsync(JournalRecord journalRecord);
+        Task AddAsync(JournalRecord journalRecord);
 
-        public Task<List<JournalRecord>> SearchAsync(DateTime fromInclusive, DateTime toInclusive);
+        Task<List<JournalRecord>> SearchAsync(DateTime fromInclusive, DateTime toInclusive);
 
-        public Task<JournalRecord> GetLastSucceededOperationAsync(string dbHost);
+        Task<JournalRecord> GetLastSucceededOperationAsync(string dbHost);
     }
 }

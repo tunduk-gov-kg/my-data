@@ -6,8 +6,6 @@ namespace MyData.Core.Interfaces
 {
     public interface IXRoadServiceStore
     {
-        Task<List<XRoadService>> GetListAsync();
-
         Task<List<XRoadService>> GetRestServicesAsync();
 
         Task<List<XRoadService>> GetSoapServicesAsync();
